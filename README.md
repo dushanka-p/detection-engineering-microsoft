@@ -11,7 +11,8 @@ detection-engineering-microsoft/
 
 ├── testing/
 │   └── attack-simulations/
-│       ├── atomic-red-team-setup.md
+│       ├── atomic-red-team-setup.md        # install-only guide
+│       ├── running-atomic-tests.md         # execution-only guide
 │       ├── _template/
 │       │   ├── attack.md
 │       │   ├── telemetry.md
