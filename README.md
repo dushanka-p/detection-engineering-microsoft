@@ -1,7 +1,7 @@
 # detection-engineering-microsoft
 This repo shows how I design and validate detections using Microsoft Sentinel and Defender telemetry.
 ```
-detection-engineering/
+detection-engineering-microsoft/
 ├── README.md
 
 ├── meta/
@@ -11,6 +11,7 @@ detection-engineering/
 
 ├── testing/
 │   └── attack-simulations/
+│       ├── atomic-red-team-setup.md
 │       ├── _template/
 │       │   ├── attack.md
 │       │   ├── telemetry.md
@@ -33,7 +34,5 @@ detection-engineering/
 
 ├── response/
 │   └── _template.md
-
-
 
 ```
