@@ -4,24 +4,25 @@ This repo shows how I design and validate detections using Microsoft Sentinel an
 detection-engineering/
 ├── README.md
 
-├── testing/                     # formerly lab/
-│   └── attack-simulations/      # formerly tests/
+├── testing/
+│   └── attack-simulations/
 │       └── _template/
 │           ├── attack.md
 │           ├── telemetry.md
 │           └── kql.md
 
-├── hunting/                     # formerly hunts/
+├── hunting/
 │   └── _template.kql
 
-├── detections/                  # production alerts
+├── detections/
 │   ├── endpoint/
 │   ├── identity/
 │   ├── email/
 │   ├── cloud/
 │   └── network/
 
-├── response/                    # formerly runbooks/
+├── response/
 │   └── _template.md
+
 
 ```
