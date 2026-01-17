@@ -1,42 +1,43 @@
-# Atomic Red Team – Installation & Lab Readiness Guide
+# Atomic Red Team – Installation Guide (Lab Only)
 
-This guide shows how to **install and prepare Atomic Red Team** for use in the
-`detection-engineering-microsoft` lab.
+This guide documents the **minimum steps required to install Atomic Red Team** for use in the
+`detection-engineering-microsoft` lab environment.
 
-**Purpose**
-
-* Generate controlled attacker telemetry
-* Validate Microsoft Sentinel & Defender visibility
-* Support repeatable detection engineering testing
-
-⚠️ **Lab use only. Never run in production.**
+⚠️ **Lab use only. Never run on production systems.**
 
 ---
 
-## 1. Scope & Assumptions
+## Scope
 
-**Environment**
+This guide covers **installation and setup only**.
+
+Out of scope:
+
+* How to run Atomic tests
+* Detection validation
+* Sentinel or Defender analysis
+* Detection engineering workflow
+
+Those steps are documented elsewhere in this repository.
+
+---
+
+## Assumptions
 
 * Windows test VM (non-production)
-* Microsoft Defender for Endpoint onboarded
-* Microsoft Sentinel connected and ingesting logs
 * Local administrator access
-
-**Out of scope**
-
-* Red team operations
-* Live malware deployment
-* Production execution
+* Microsoft Defender for Endpoint already onboarded
+* Internet access for GitHub and PowerShell Gallery
 
 ---
 
-## 2. Prerequisites
+## 1. Prerequisites
 
-### 2.1 PowerShell
+### PowerShell
 
 * PowerShell 5.1 or later
 
-Allow script execution (current user only):
+Allow script execution for the current user:
 
 ```powershell
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
@@ -44,23 +45,21 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 ---
 
-### 2.2 Git
+### Git
 
-Required to clone Atomic Red Team.
+Git is required to download Atomic Red Team.
 
-Verify Git is installed:
+Verify Git is available:
 
 ```powershell
 git --version
 ```
 
-If Git is not installed, install it before continuing.
-
 ---
 
-## 3. Installation Steps
+## 2. Install Atomic Red Team (Attack Definitions)
 
-### Step 1: Clone Atomic Red Team
+### Step 1: Clone the Repository
 
 ```powershell
 cd C:\Tools
@@ -73,13 +72,39 @@ Expected path:
 C:\Tools\atomic-red-team
 ```
 
+This repository contains:
+
+* Atomic test definitions
+* MITRE ATT&CK mappings
+* Supporting documentation
+
+⚠️ This repository **does NOT include** the PowerShell execution module.
+
 ---
 
-### Step 2: Import the Atomic PowerShell Module
+## 3. Install the PowerShell Execution Module
+
+Atomic tests are executed using the **Invoke-AtomicRedTeam** PowerShell module, which is installed **separately** from the PowerShell Gallery.
+
+### Step 2: Install the Module (Administrator Required)
+
+Open PowerShell **as Administrator**, then run:
 
 ```powershell
-cd C:\Tools\atomic-red-team
-Import-Module .\atomics\Invoke-AtomicRedTeam.psd1
+Install-Module Invoke-AtomicRedTeam -Scope AllUsers -Force
+```
+
+If prompted:
+
+* NuGet provider → **Accept**
+* Untrusted repository → **Accept**
+
+---
+
+### Step 3: Import and Verify the Module
+
+```powershell
+Import-Module Invoke-AtomicRedTeam
 ```
 
 Verify installation:
@@ -88,130 +113,65 @@ Verify installation:
 Get-Command Invoke-AtomicTest
 ```
 
-If the command exists, Atomic Red Team is ready.
+If `Invoke-AtomicTest` is returned, the module is installed correctly.
 
 ---
 
-## 4. Dependency Handling (Important)
+## 4. Configure Atomic Path (Required)
 
-Atomic tests may require dependencies such as:
+By default, the module expects Atomic tests at:
 
-* PowerShell
-* cmd.exe
-* bitsadmin
-* certutil
-* curl / WebClient
+```
+C:\AtomicRedTeam\atomics
+```
 
-### Rule
+In this lab, Atomics are stored at:
 
-👉 **Install dependencies per test, not globally**
+```
+C:\Tools\atomic-red-team\atomics
+```
 
-Example:
+Set the correct path for the current session:
 
 ```powershell
-Invoke-AtomicTest T1059 -GetPrereqs
+$env:ATOMIC_RED_TEAM_PATH = "C:\Tools\atomic-red-team"
 ```
 
-Do **not** preinstall everything “just in case”.
-
----
-
-## 5. Execution Model (How to Run Tests)
-
-### Rule: One MITRE Technique at a Time
-
-Atomic tests are executed **by MITRE technique**, matching this repo structure:
-
-```
-testing/attack-simulations/
-└── T1059_Command_and_Scripting/
-```
-
-Example execution:
+Verify:
 
 ```powershell
-Invoke-AtomicTest T1059 -TestNumbers 1
+Test-Path "$env:ATOMIC_RED_TEAM_PATH\atomics"
 ```
 
----
+Expected output:
 
-## 6. Documentation Rule (Mandatory)
+```
+True
+```
 
-Every Atomic execution **must** be documented.
-
-Record:
-
-* Technique ID
-* Test number
-* Timestamp
-* Hostname
-* Expected telemetry
-
-This maps directly to:
-
-* `attack.md`
-* `telemetry.md`
-
-If it isn’t documented, it didn’t happen.
+> Optional: persist this setting in your PowerShell profile if required.
 
 ---
 
-## 7. Defender & Sentinel Validation
+## 5. Cautions & Safety Notes
 
-After execution, validate telemetry in Sentinel.
+* ❌ Never install or run Atomic Red Team on production systems
+* ❌ Do not modify Atomic tests directly
+* ❌ Do not assume tests are safe — review before execution
+* ❌ Do not install dependencies globally unless required by a specific test
 
-### Endpoint Tables
-
-* `DeviceProcessEvents`
-* `DeviceFileEvents`
-* `DeviceNetworkEvents`
-
-### Identity Tables (if applicable)
-
-* `SigninLogs`
-* `AuditLogs`
-
-A blocked test still counts as **successful telemetry generation**.
+Atomic Red Team is a **telemetry generator**, not a payload delivery tool.
 
 ---
 
-## 8. Safety Rules (Non-Negotiable)
+## Completion Criteria
 
-* ❌ Never run Atomics on production systems
-* ❌ Never auto-run `-Cleanup` without review
-* ❌ Never modify Atomic tests directly
+Installation is complete when:
 
-All adjustments must be documented **in this repo**, not upstream.
+* Atomic Red Team repo exists under `C:\Tools\atomic-red-team`
+* `Invoke-AtomicTest` is available in PowerShell
+* `$env:ATOMIC_RED_TEAM_PATH\atomics` resolves correctly
 
----
-
-## 9. Common Notes
-
-* Some tests are noisy by design
-* Some tests will be blocked by Defender
-* Blocked ≠ failed (telemetry still matters)
-* Results may vary based on Defender configuration
-
----
-
-## 10. Detection Engineering Workflow Mapping
-
-| Phase          | Artifact             |
-| -------------- | -------------------- |
-| Execute Atomic | `attack.md`          |
-| Observe Logs   | `telemetry.md`       |
-| Explore Logic  | `hunting/*.kql`      |
-| Create Alert   | `detections/*/*.kql` |
-| SOC Action     | `response/*.md`      |
-
-Atomic Red Team is **a telemetry generator**, not the goal.
-
----
-
-## 11. References
-
-* Atomic Red Team (Red Canary)
-* MITRE ATT&CK Framework
-* Microsoft Defender for Endpoint documentation
+No tests should be executed as part of this guide.
 
 ---
