@@ -21,10 +21,9 @@ detection-engineering-microsoft/
 │       ├── T1110_Brute_Force/
 │       └── T1078_Valid_Accounts/
 
-├── hunting/
-│   └── _template.kql
-
 ├── detections/
+│   ├── _template/
+│   │   └── detection.md                   # canonical detection template
 │   ├── endpoint/
 │   │   └── DE-ENDP-001-example-detection/
 │   │       ├── rule.kql
@@ -39,6 +38,5 @@ detection-engineering-microsoft/
 
 ├── response/
 │   └── _template.md
-
 
 ```
