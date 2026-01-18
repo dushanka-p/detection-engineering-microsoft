@@ -26,14 +26,19 @@ detection-engineering-microsoft/
 
 ├── detections/
 │   ├── endpoint/
-│   │   ├── experimental/
-│   │   └── production/
+│   │   └── DE-ENDP-001-example-detection/
+│   │       ├── rule.kql
+│   │       └── detection.md
 │   ├── identity/
+│   │   └── DE-IDENT-001-example-detection/
+│   │       ├── rule.kql
+│   │       └── detection.md
 │   ├── email/
 │   ├── cloud/
 │   └── network/
 
 ├── response/
 │   └── _template.md
+
 
 ```
