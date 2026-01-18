@@ -1,5 +1,14 @@
 # detection-engineering-microsoft
 This repo shows how I design and validate detections using Microsoft Sentinel and Defender telemetry.
+
+## Detection → Alert → SOC Investigation Flow
+
+This repository follows a production-aligned workflow where detections are
+engineered, validated, and then consumed by SOC operations.
+
+📄 Detailed flow:
+docs/detection-to-soc-flow.md
+
 ```
 detection-engineering-microsoft/
 ├── README.md
