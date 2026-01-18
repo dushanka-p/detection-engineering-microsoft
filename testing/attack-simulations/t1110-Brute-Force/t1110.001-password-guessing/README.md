@@ -31,7 +31,10 @@ Confirm telemetry is present:
 
 ```kql
 SigninLogs
+| where TimeGenerated >= ago(30m)
+| where UserPrincipalName  =~ "UPN-HERE"
 | where ResultType != 0
+| project TimeGenerated, UserPrincipalName, ResultType, IPAddress, ClientAppUsed, AppDisplayName
 | order by TimeGenerated desc
 ```
 Expected outcomes:
