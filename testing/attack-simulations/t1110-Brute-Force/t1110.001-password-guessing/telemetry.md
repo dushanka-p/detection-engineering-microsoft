@@ -1,16 +1,27 @@
 ## Validation
 
-Failed sign-in events observed for test.user@yourtenant.com.
+Failed sign-in events observed for `test.user@yourtenant.com`.
 
-Observed fields:
-- UserPrincipalName: 
-- ResultType: 
-- IPAddress: 185.xxx.xx.82
-- ClientAppUsed
-- AppDisplayName
+### Observed fields (sample event)
 
-Time window:
-2026-01-18T12:37:33.1727416Z
+- **UserPrincipalName:** `test.user@yourtenant.com`
+- **ResultType:** `50126` (Invalid username or password)
+- **IPAddress:** `185.xxx.xx.82`
+- **ClientAppUsed:** `Browser`
+- **AppDisplayName:** `Azure Portal`
 
-Notes:
-Telemetry confirmed via SignInLogs query.
+### Time window
+
+- **Start:** `2026-01-18T12:37:33Z`
+- **End:** `2026-01-18T12:42:33Z`  
+
+### Validation query
+
+```kql
+SigninLogs
+| where TimeGenerated >= ago(30m)
+| where UserPrincipalName =~ "test.user@yourtenant.com"
+| where ResultType != 0
+| project TimeGenerated, UserPrincipalName, ResultType, IPAddress, ClientAppUsed, AppDisplayName
+| order by TimeGenerated desc
+
