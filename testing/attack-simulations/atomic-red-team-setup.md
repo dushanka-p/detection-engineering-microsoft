@@ -131,7 +131,13 @@ In this lab, Atomics are stored at:
 C:\Tools\atomic-red-team\atomics
 ```
 
-Set the correct path for the current session:
+This path must be configured before using `Invoke-AtomicTest`.
+
+---
+
+### 4.1 Configure Path for Current Session (Temporary)
+
+Set the environment variable:
 
 ```powershell
 $env:ATOMIC_RED_TEAM_PATH = "C:\Tools\atomic-red-team"
@@ -149,7 +155,82 @@ Expected output:
 True
 ```
 
-> Optional: persist this setting in your PowerShell profile if required.
+⚠️ This configuration applies **only to the current PowerShell session**.
+Closing PowerShell will reset it.
+
+---
+
+### 4.2 Configure Persistent Path (Recommended)
+
+To ensure the correct Atomic path is automatically used in every session, configure your PowerShell profile.
+
+#### Step 1: Identify Profile Location
+
+```powershell
+$PROFILE
+```
+
+If the file does not exist:
+
+```powershell
+New-Item -ItemType File -Path $PROFILE -Force
+```
+
+---
+
+#### Step 2: Edit Profile
+
+```powershell
+notepad $PROFILE
+```
+
+Add the following lines:
+
+```powershell
+$env:ATOMIC_RED_TEAM_PATH = "C:\Tools\atomic-red-team"
+
+$PSDefaultParameterValues["Invoke-AtomicTest:PathToAtomicsFolder"] = `
+    "$env:ATOMIC_RED_TEAM_PATH\atomics"
+```
+
+Save and close the file.
+
+---
+
+#### Step 3: Restart PowerShell
+
+Close all PowerShell windows and reopen.
+
+Validate configuration:
+
+```powershell
+Invoke-AtomicTest T1003 -ShowDetailsBrief
+```
+
+If the command runs without referencing:
+
+```
+C:\AtomicRedTeam\atomics
+```
+
+then configuration is correct.
+
+---
+
+### Why This Configuration Is Required
+
+`Invoke-AtomicTest` contains a hardcoded default path:
+
+```
+C:\AtomicRedTeam\atomics
+```
+
+Using `$PSDefaultParameterValues` ensures:
+
+* The correct lab path is automatically supplied
+* Manual `-PathToAtomicsFolder` parameters are not required
+* The environment remains consistent across reboots
+* The lab setup is fully reproducible
 
 ---
 
@@ -171,6 +252,7 @@ Installation is complete when:
 * Atomic Red Team repo exists under `C:\Tools\atomic-red-team`
 * `Invoke-AtomicTest` is available in PowerShell
 * `$env:ATOMIC_RED_TEAM_PATH\atomics` resolves correctly
+* `Invoke-AtomicTest T1003 -ShowDetailsBrief` works without specifying a path
 
 No tests should be executed as part of this guide.
 
