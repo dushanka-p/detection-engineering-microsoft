@@ -1,4 +1,4 @@
-# Detection Engineering Microsoft
+# Detection Engineering - Microsoft
 
 1. 🧨 Generate telemetry
 2. 🚨 Trigger alert
