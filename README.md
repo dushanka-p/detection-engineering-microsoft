@@ -1,4 +1,10 @@
-# detection-engineering-microsoft
+# Detection Engineering Microsoft
+
+1. 🧨 Generate telemetry
+2. 🚨 Trigger alert
+3. 🧠 Investigate alert
+4. 📝 Document findings
+5. 🔁 Improve detection
 
 Detection engineering using **Microsoft Sentinel** and **Microsoft Defender** telemetry,
 with a clear separation between **testing**, **detection logic**, and **SOC operations**.
