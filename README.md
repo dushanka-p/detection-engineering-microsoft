@@ -169,11 +169,13 @@ detection-engineering-microsoft/
 │       └── T1059.001-powershell/
 │           ├── test-03-bloodhound-memory/
 │           │   ├── execution.md
-│           │   └── investigation.md
+│           │   ├── investigation.md
+│           │   └── cleanup.md
 │           │
 │           └── test-10-fileless-registry/
 │               ├── execution.md
-│               └── investigation.md
+│               ├── investigation.md
+│               └── cleanup.md
 │
 ├── detections/
 │   ├── endpoint/
@@ -201,7 +203,6 @@ detection-engineering-microsoft/
 └── portfolio/
     └── case-studies/
         └── cs-001-user-containment-after-download-cradle.md
-
 ```
 
 ---
