@@ -1,0 +1,69 @@
+// de-endp-001
+// powershell in-memory download cradle
+// primary technique: t1059.001
+// related: t1105, t1071.001
+
+let lookback = 7d;
+let window = 5m;
+
+// 1) suspicious powershell process execution (download cradle patterns)
+let ps_cradle =
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where FileName =~ "powershell.exe"
+| where ProcessCommandLine has_any (
+    "downloadstring",
+    "new-object net.webclient",
+    "system.net.webclient",
+    "invoke-expression",
+    "iex",
+    "iwr",
+    "invoke-webrequest",
+    "irm",
+    "invoke-restmethod"
+)
+| project
+    DeviceId,
+    DeviceName,
+    AccountName,
+    InitiatingProcessAccountName,
+    ProcessId,
+    ProcessCommandLine,
+    PS_Time = Timestamp;
+
+// 2) network activity to common remote script/payload sources (extend as needed)
+let net_pull =
+DeviceNetworkEvents
+| where Timestamp > ago(lookback)
+| where RemoteUrl has_any (
+    "raw.githubusercontent.com",
+    "githubusercontent.com",
+    "pastebin.com",
+    "cdn.",
+    ".blob.core.windows.net",
+    "storage.googleapis.com"
+)
+| project
+    DeviceId,
+    RemoteUrl,
+    RemoteIP,
+    RemotePort,
+    Protocol,
+    Net_Time = Timestamp;
+
+// correlate process + network within a short window (stronger signal than command line alone)
+ps_cradle
+| join kind=leftouter net_pull on DeviceId
+| where isnull(Net_Time) or abs(datetime_diff("minute", PS_Time, Net_Time)) <= toint(window / 1m)
+| project
+    Timestamp = PS_Time,
+    DeviceName,
+    AccountName,
+    InitiatingProcessAccountName,
+    ProcessId,
+    ProcessCommandLine,
+    RemoteUrl,
+    RemoteIP,
+    RemotePort,
+    Protocol
+| order by Timestamp desc
