@@ -161,33 +161,30 @@ https://github.com/yourname/detection-engineering-microsoft/detections/identity/
 
 ```text
 detection-engineering-microsoft/
-├── README.md
 │
-├── meta/
-│   ├── data-sources.md
-│   ├── naming-conventions.md
-│   └── maturity-model.md
+├── readme.md
 │
 ├── testing/
 │   └── attack-simulations/
-│       ├── atomic-red-team-setup.md
-│       ├── running-atomic-tests.md
-│       ├── _template/
-│       │   ├── attack.md
-│       │   ├── telemetry.md
-│       │   └── kql.md
-│       ├── T1059_Command_and_Scripting/
-│       ├── T1110_Brute_Force/
-│       └── T1078_Valid_Accounts/
+│       └── t1059.001-powershell/
+│           ├── test-03-bloodhound-memory/
+│           │   ├── execution.md
+│           │   └── investigation.md
+│           │
+│           └── test-10-fileless-registry/
+│               ├── execution.md
+│               └── investigation.md
 │
 ├── detections/
-│   ├── _template/
-│   │   └── detection.md
-│   ├── identity/
-│   ├── endpoint/
-│   ├── email/
-│   ├── cloud/
-│   └── network/
+│   └── endpoint/
+│       └── de-endp-001-powershell-download-cradle/
+│           ├── detection.md
+│           └── rule.kql
+│
+└── portfolio/
+    └── case-studies/
+        └── cs-001-user-containment-after-download-cradle.md
+
 ```
 
 ---
