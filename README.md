@@ -162,11 +162,11 @@ https://github.com/yourname/detection-engineering-microsoft/detections/identity/
 ```text
 detection-engineering-microsoft/
 │
-├── readme.md
+├── README.md
 │
 ├── testing/
 │   └── attack-simulations/
-│       └── t1059.001-powershell/
+│       └── T1059.001-powershell/
 │           ├── test-03-bloodhound-memory/
 │           │   ├── execution.md
 │           │   └── investigation.md
@@ -176,10 +176,27 @@ detection-engineering-microsoft/
 │               └── investigation.md
 │
 ├── detections/
-│   └── endpoint/
-│       └── de-endp-001-powershell-download-cradle/
-│           ├── detection.md
-│           └── rule.kql
+│   ├── endpoint/
+│   │   ├── execution/
+│   │   │   └── de-endp-exec-001-powershell-download-cradle/
+│   │   │       ├── detection.md
+│   │   │       ├── rule.kql
+│   │   │       └── test-mapping.md
+│   │   │
+│   │   ├── credential-access/
+│   │   │
+│   │   └── persistence/
+│   │
+│   ├── identity/
+│   │   ├── brute-force/
+│   │   ├── impossible-travel/
+│   │   └── mfa-bypass/
+│   │
+│   ├── email/
+│   │   └── phishing/
+│   │
+│   └── cloud/
+│       └── control-plane/
 │
 └── portfolio/
     └── case-studies/
